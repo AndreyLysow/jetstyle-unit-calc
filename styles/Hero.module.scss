@@ -1,0 +1,135 @@
+/* ===== Base ===== */
+.hero {
+	background: #362F81;
+	color: #fff;
+	overflow: visible;
+}
+
+.in {
+	/* слева текст, справа картинка */
+	display: grid;
+	grid-template-columns: 1fr 560px;
+	grid-template-areas: "text art";
+	align-items: center;
+	gap: 40px;
+	padding: 84px 24px;
+	position: relative;
+	overflow: visible;
+}
+
+.text {
+	grid-area: text;
+	position: relative;
+	z-index: 2;
+}
+
+.art {
+	grid-area: art;
+	justify-self: end;
+	position: relative;
+	z-index: 1;
+}
+
+.title {
+	margin: 0 0 16px;
+	max-width: 928px;
+	font-weight: 700;
+	font-size: 64px;
+	line-height: .98;
+	letter-spacing: 0;
+}
+
+.line {
+	display: block;
+}
+
+.sub {
+	max-width: 584px;
+	margin: 0;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 1.5;
+	opacity: .95;
+}
+
+.art :global(img) {
+	display: block;
+	height: auto;
+}
+
+/* ===== Large tablet ===== */
+@media (max-width: 1200px) {
+	.in {
+		grid-template-columns: 1fr 480px;
+	}
+
+	.title {
+		font-size: 56px;
+	}
+}
+
+/* ===== Tablet: один столбик, без наползания ===== */
+@media (max-width: 992px) {
+	.in {
+		grid-template-columns: 1fr;
+		grid-template-areas:
+			"text"
+			"art";
+	}
+
+	.art {
+		justify-self: start;
+		margin-top: 32px;
+	}
+
+	.text {
+		transform: none;
+	}
+
+	/* на всякий случай обнуляем */
+}
+
+/* ===== Mobile 375px: картинка сверху + текст наползает ===== */
+@media (max-width: 480px) {
+	.in {
+		grid-template-columns: 1fr;
+		/* картинка первой, текст второй */
+		grid-template-areas:
+			"art"
+			"text";
+		padding: 20px 16px 32px;
+	}
+
+	.art {
+		justify-self: center;
+		margin: 0;
+	}
+
+	.art :global(img) {
+		width: 224px;
+		height: auto;
+	}
+
+	/* НАПОЛЗАНИЕ: безопасно через transform */
+	.text {
+		transform: translateY(-44px);
+		will-change: transform;
+		z-index: 2;
+	}
+
+	.title {
+		font-size: 42px;
+		line-height: 44px;
+		text-align: center;
+		max-width: 345px;
+		margin: 0 auto 12px;
+	}
+
+	.sub {
+		font-size: 16px;
+		line-height: 1.45;
+		max-width: 345px;
+		text-align: left;
+		margin: 0 auto;
+	}
+}

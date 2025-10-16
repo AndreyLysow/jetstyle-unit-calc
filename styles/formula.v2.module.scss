@@ -1,0 +1,414 @@
+/* === FORMULA (JetStyle layout) ========================================= */
+
+.formula {
+	/* базовые размеры */
+	--H: 152px;
+	--W-left: 390px;
+	--W-mid: 370px;
+	--W-ret: 150px;
+	--W-au: 105px;
+	/* было 210px → в 2 раза меньше */
+	--input-h: 34px;
+	--label-h: 18px;
+	/* фиксируем высоту label, чтобы не «плавали» разделители */
+	--gap-x: 8px;
+	--gap-y: 6px;
+
+	/* ширина самих инпутов (для всех карточек) */
+	--input-w: 70%;
+	/* при желании можно подрегулировать только этот процент */
+
+	display: inline-flex;
+	align-items: flex-start;
+	gap: var(--gap-x);
+	padding: 12px 16px;
+	white-space: nowrap;
+	box-sizing: border-box;
+	font-feature-settings: "tnum" 1;
+}
+
+/* знаки и скобки */
+.op,
+.brace {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--H);
+	min-width: 14px;
+	color: #8aa0c8;
+	font-weight: 800;
+	font-size: 18px;
+}
+
+.op {
+	color: #4a78e0;
+}
+
+/* общий каркас */
+.group {
+	background: #fff;
+	border: 1px solid #d9e1ee;
+	border-radius: 10px;
+	padding: 10px 8px;
+	box-sizing: border-box;
+	height: var(--H);
+}
+
+/* ================= LEFT ================= */
+.left {
+	width: var(--W-left);
+	background: #fff6f6;
+	border: 1px solid #ffe0e0;
+
+	display: grid;
+	grid-template-columns: 100px 12px 100px 12px 100px;
+	align-items: start;
+	row-gap: var(--gap-y);
+}
+
+/* «прозрачные» врапперы */
+.inputsLeft,
+.bottomRow {
+	display: contents;
+}
+
+/* разделитель «/» — ровно по центру строки инпута */
+.sep {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	/* ставим по вертикали на уровень поля ввода */
+	height: var(--input-h);
+	margin-top: var(--label-h);
+
+	font-weight: 800;
+	color: #4a78e0;
+	font-size: 16px;
+}
+
+/* подписи/итоги */
+.noteTitle {
+	grid-column: 1 / 3;
+	font-size: 11px;
+	font-weight: 700;
+	color: #0b3b6f;
+	margin-top: 4px;
+}
+
+.loss {
+	grid-column: 5 / 6;
+	justify-self: end;
+	font-size: 11px;
+	font-weight: 700;
+	color: #e03d3d;
+	margin-top: 4px;
+}
+
+.noteText {
+	grid-column: 1 / -1;
+	font-size: 10px;
+	color: #6b7c92;
+}
+
+/* ================= MID + RET ================= */
+.midCombo {
+	position: relative;
+	display: inline-flex;
+	align-items: stretch;
+}
+
+.mid {
+	width: var(--W-mid);
+	background: #f0f6ff;
+	border-right: 0;
+	border-radius: 10px 0 0 10px;
+
+	display: grid;
+	grid-auto-rows: min-content;
+	row-gap: var(--gap-y);
+}
+
+.inputsMid {
+	display: grid;
+	grid-template-columns: 150px 12px 150px;
+	column-gap: var(--gap-x);
+	align-items: start;
+}
+
+/* «–» посередине строки инпута */
+.innerOp {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--input-h);
+	margin-top: var(--label-h);
+	font-weight: 800;
+	color: #8aa0c8;
+}
+
+/* подпись маржи и LTV — фиксируем линию, чтобы не «прыгало» */
+.subNote {
+	font-size: 10px;
+	color: #6b7c92;
+	line-height: 20px;
+}
+
+.ltv {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	min-height: 22px;
+	/* держим высоту строки */
+	font-size: 11px;
+	font-weight: 600;
+	color: #0b3b6f;
+}
+
+.noteValue {
+	font-weight: 700;
+	color: #0b3b6f;
+	font-size: 11px;
+}
+
+/* «×» строго между mid и ret */
+.inMul::after {
+	content: "×";
+	position: absolute;
+	left: var(--W-mid);
+	top: 50%;
+	transform: translate(-50%, -50%);
+	font-weight: 800;
+	color: #4a78e0;
+}
+
+.ret {
+	width: var(--W-ret);
+	background: #f5f7fb;
+	border-left: 0;
+	border-radius: 0 10px 10px 0;
+
+	display: flex;
+	align-items: flex-start;
+	padding: 10px;
+}
+
+/* ================= PPPU / AU ================= */
+
+.pppuRow {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: var(--H);
+	margin-top: -5px;
+	/* 👈 поднимаем весь PPPU-блок ровно на 5px */
+}
+
+.eq {
+	color: #4a78e0;
+	font-weight: 800;
+	margin-inline: 2px 6px;
+	font-size: 18px;
+	line-height: 1;
+}
+
+.pppu {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 2px;
+	padding: 8px 0;
+}
+
+.pppuLabel {
+	position: relative;
+	top: -5px;
+	font-size: 10px;
+	color: #6b7c92;
+	line-height: 1;
+	margin-bottom: 2px;
+}
+
+.pppuValue {
+	font-weight: 800;
+	font-size: 16px;
+	color: #2a74ff;
+	white-space: nowrap;
+	text-align: right;
+	line-height: 1.2;
+}
+
+/* AU — остаётся как в последней версии */
+.au {
+	width: calc(var(--W-au) * 2);
+	min-width: calc(var(--W-au) * 2);
+	height: var(--H);
+	align-self: flex-start;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: 6px;
+
+	background: #fff;
+	border: 1px solid #d9e1ee;
+	border-radius: 10px;
+	padding: 10px 12px;
+	box-sizing: border-box;
+}
+
+/* подпись AU */
+.au .label {
+	font-size: 10px;
+	color: #6b7c92;
+	text-align: left;
+	line-height: 1.2;
+}
+
+/* инпут AU */
+.au .input {
+	width: 100%;
+	height: 34px;
+	font-size: 14px;
+	padding: 6px 8px;
+	border: 1px solid #d9e1ee;
+	border-radius: 8px;
+	box-sizing: border-box;
+	color: #0f2033;
+}
+
+/* подпись под AU */
+.au .noteText {
+	width: 100%;
+	white-space: normal;
+	word-break: break-word;
+	overflow-wrap: anywhere;
+	text-align: left;
+	font-size: 10px;
+	color: #6b7c92;
+	line-height: 1.3;
+	margin-top: 4px;
+}
+
+/* ================= INPUTS ================= */
+.box {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+/* фиксированная высота label — всё выравнивается стабильно */
+.label {
+	height: var(--label-h);
+	line-height: var(--label-h);
+	font-size: 10px;
+	color: #6b7c92;
+	text-align: left;
+	margin-left: 2px;
+}
+
+.input {
+	height: var(--input-h);
+	padding: 0 8px;
+	font-size: 14px;
+	color: #0f2033;
+	border: 1px solid #d9e1ee;
+	border-radius: 8px;
+	background: #fff;
+	box-sizing: border-box;
+}
+
+/* единая ширина инпутов через переменную */
+.left .input,
+.mid .input,
+.ret .input,
+.au .input {
+	width: var(--input-w);
+	margin-left: 0;
+	margin-right: auto;
+}
+
+.input:focus {
+	outline: 2px solid #2a74ff;
+	border-color: #2a74ff;
+}
+
+/* немного опускаем «внутренности», не ломая grid/flex */
+.group,
+.au {
+	padding-top: 36px;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 420px) {
+	.formula {
+		--H: auto;
+		gap: 6px;
+		flex-wrap: wrap;
+		white-space: normal;
+		align-items: stretch;
+	}
+
+	.op,
+	.brace {
+		display: none;
+	}
+
+	.left,
+	.midCombo,
+	.ret,
+	.pppuRow,
+	.au {
+		width: 100%;
+	}
+
+	.left,
+	.mid,
+	.ret {
+		height: auto;
+		border-radius: 10px;
+		position: relative;
+		padding-top: 22px;
+	}
+
+	.left::before,
+	.mid::before {
+		position: absolute;
+		left: 10px;
+		top: 6px;
+		color: #8aa0c8;
+		font-weight: 800;
+	}
+
+	.left::before {
+		content: "− (";
+	}
+
+	.mid::before {
+		content: "+ (";
+	}
+
+	.inMul::after {
+		display: none;
+	}
+
+	.midCombo::after {
+		content: "×";
+		position: absolute;
+		right: 12px;
+		top: 6px;
+		font-weight: 800;
+		color: #8aa0c8;
+	}
+
+	.input {
+		height: 32px;
+		font-size: 13px;
+	}
+
+	.label,
+	.noteText {
+		font-size: 9px;
+	}
+}

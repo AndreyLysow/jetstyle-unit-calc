@@ -1,0 +1,118 @@
+.wrap {
+	margin-top: 12px;
+}
+
+/* Кнопка-заголовок без «пилюли»: круглая стрелка + текст */
+.headerBtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	background: transparent;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	color: var(--text, #0f2033);
+}
+
+/* круглая синяя «таблетка» со стрелкой */
+.chevWrap {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: #4a90d9;
+	display: grid;
+	place-items: center;
+	transition: transform .25s ease, background .2s ease;
+}
+
+.headerBtn:hover .chevWrap {
+	background: #3d7fc2;
+}
+
+.chev {
+	width: 8px;
+	height: 8px;
+	border-right: 2px solid #fff;
+	border-bottom: 2px solid #fff;
+	transform: rotate(45deg);
+	/* вниз */
+	transition: transform .25s ease;
+}
+
+.up .chev {
+	transform: rotate(-135deg);
+}
+
+/* вверх */
+
+/* текст заголовка — НЕ жирный (как просили) */
+.headerText {
+	font-size: 14px;
+	font-weight: 400;
+	user-select: none;
+}
+
+/* плавное раскрытие */
+.collapse {
+	overflow: hidden;
+	transition: max-height .4s ease, opacity .25s ease;
+	opacity: 0;
+}
+
+.open {
+	opacity: 1;
+}
+
+.closed {
+	opacity: 0;
+}
+
+/* внутренние отступы, чтобы контент не упирался в края */
+.inner {
+	padding: 8px 16px 16px;
+}
+
+/* сетка метрик */
+.grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(240px, 1fr));
+	column-gap: 28px;
+	row-gap: 10px;
+}
+
+@media (max-width: 1024px) {
+	.grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 720px) {
+	.grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+.row {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	align-items: baseline;
+	gap: 12px;
+	padding: 6px 0;
+	border-bottom: 1px solid var(--border, #e8eef7);
+}
+
+.row:last-child {
+	border-bottom: none;
+}
+
+.label {
+	font-size: 14px;
+	color: var(--text, #0f2033);
+}
+
+.val {
+	font-size: 14px;
+	font-weight: 700;
+	color: var(--text, #0f2033);
+	white-space: nowrap;
+}

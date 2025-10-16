@@ -1,0 +1,257 @@
+/* ===== Контейнеры ===== */
+.wrap {
+	max-width: 1500px;
+	margin-inline: auto;
+	padding: 44px 24px 72px;
+}
+
+.panel {
+	background: var(--panel);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+	overflow: hidden;
+}
+
+/* ===== Шапка ===== */
+.headerBar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 16px;
+	background: var(--panel-light);
+	border-bottom: 1px solid var(--border);
+}
+
+.titleInput {
+	flex: 1;
+	height: 42px;
+	padding: 0 14px;
+	background: #eaf2ff;
+	border: 1px solid #d6e2f5;
+	border-radius: 8px;
+	color: #254a80;
+	font: 800 20px/1.1 inherit;
+	outline: none;
+	transition: border-color .12s ease, box-shadow .12s ease;
+
+	&:focus {
+		border-color: #a9c4f3;
+		box-shadow: 0 0 0 3px rgba(71, 123, 224, .18);
+	}
+}
+
+.headerActions {
+	display: inline-flex;
+	gap: 8px;
+}
+
+.iconBtn {
+	inline-size: 34px;
+	block-size: 34px;
+	display: grid;
+	place-items: center;
+	background: #fff;
+	border: 1px solid #d6e2f5;
+	border-radius: 8px;
+	color: #8fa6c5;
+	cursor: pointer;
+	transition: background .12s ease, color .12s ease, border-color .12s ease;
+
+	&:hover {
+		background: #f3f7ff;
+		color: #5b7fb3;
+		border-color: #c5d6f1;
+	}
+
+	&:active {
+		background: #e9f1ff;
+	}
+}
+
+/* ===== Подсказки к аббревиатуре ===== */
+.tipWrap {
+	position: relative;
+	display: inline-block;
+}
+
+.abbr {
+	padding: 2px 6px;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	background: var(--panel-light);
+	color: var(--text);
+	text-decoration: none;
+	cursor: help;
+}
+
+.tooltip {
+	position: absolute;
+	inset-inline-start: 0;
+	inset-block-start: calc(100% + 6px);
+	min-inline-size: 240px;
+	max-inline-size: 320px;
+	padding: 8px 10px;
+	font-size: 12px;
+	line-height: 1.35;
+	color: var(--text);
+	background: #fff;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	box-shadow: 0 10px 28px rgba(7, 45, 68, .12);
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(-2px);
+	transition: opacity .12s ease, transform .12s ease;
+	z-index: 10;
+}
+
+.tipWrap:hover .tooltip {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* ===== Итого ===== */
+.totalRow {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 16px 16px;
+	border-top: 1px dashed var(--border);
+}
+
+.totalLabel {
+	color: var(--muted);
+	font-size: 13px;
+}
+
+.totalValue {
+	color: var(--text);
+	font-weight: 800;
+	font-size: 15px;
+}
+
+/* ===== Кнопки справа ===== */
+.actionsRight {
+	padding: 0 16px 16px;
+	text-align: end;
+}
+
+.btnPrimary {
+	display: inline-block;
+	padding: 11px 16px;
+	font-size: 14px;
+	font-weight: 600;
+	color: #fff;
+	background: var(--blue);
+	border: none;
+	border-radius: 12px;
+	cursor: pointer;
+	transition: filter .12s ease, transform .02s ease;
+
+	&:hover {
+		filter: brightness(1.05);
+	}
+
+	&:active {
+		transform: translateY(1px);
+	}
+}
+
+/* ===== Сохранённые расчёты (карточки) ===== */
+.savedBlock {
+	margin-top: 16px;
+}
+
+.savedTitle {
+	margin-bottom: 10px;
+	color: var(--text);
+	font-weight: 700;
+}
+
+.cardList {
+	display: grid;
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.card {
+	padding: 14px 16px;
+	background: #f1f6ff;
+	border: 1px solid #dbe7ff;
+	border-radius: 12px;
+}
+
+.cardHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 8px;
+}
+
+.cardTitle {
+	color: #2a74ff;
+	font-weight: 800;
+	font-size: 18px;
+}
+
+.editLink {
+	appearance: none;
+	background: transparent;
+	border: 0;
+	color: #2a74ff;
+	font-weight: 600;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	transition: opacity .12s ease;
+
+	&:hover {
+		text-decoration: underline;
+	}
+
+	&:active {
+		opacity: .75;
+	}
+}
+
+.cardFormula {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	color: #0f2033;
+	font-size: 18px;
+	line-height: 1.3;
+}
+
+.fMinus {
+	color: #4a78e0;
+	font-weight: 800;
+	margin-inline-end: 2px;
+}
+
+.eq {
+	margin-inline: 8px;
+	color: #6b7c92;
+	font-weight: 800;
+}
+
+.pppuValue {
+	color: #2a74ff;
+	font-weight: 800;
+}
+
+/* ===== Мобильные правки ===== */
+@media (max-width: 520px) {
+	.cardFormula {
+		font-size: 16px;
+	}
+
+	.cardTitle {
+		font-size: 16px;
+	}
+}
