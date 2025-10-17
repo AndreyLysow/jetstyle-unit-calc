@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import styles from '@/styles/unitcalc.module.scss';
+import styles from '@/styles/UnitCalc.module.scss';
 import FormulaCard from './FormulaCard';
 import MetricsSection from './MetricsSection';
 import CompareResults from './CompareResults';
