@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import styles from '@/styles/UnitCalc.module.scss';
+import styles from '../../styles/UnitCalc.module.scss';
 import FormulaCard from './FormulaCard';
 import MetricsSection from './MetricsSection';
 import CompareResults from './CompareResults';
-import type { CalcDoc } from '@/server/models/Calc';
+import type { CalcDoc } from '../../server/models/Calc';
 
 type Inputs = {
   cpc: number;

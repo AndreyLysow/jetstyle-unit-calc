@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbConnect } from "@/lib/mongodb";
-import { Calc } from "@/server/models/Calc";
+import { dbConnect } from "../../../../lib/mongodb";
+import { Calc } from "../../../../server/models/Calc";
 import { isValidObjectId } from "mongoose";
 
 // поля, которые должны быть числовыми

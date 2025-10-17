@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import s from '@/styles/metrics.module.scss';
+import s from '../../styles/metrics.module.scss';
 
 type Props = {
   showMore: boolean;

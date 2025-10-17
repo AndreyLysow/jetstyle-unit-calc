@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import s from '@/styles/compare.module.scss';
-import type { CalcDoc } from '@/server/models/Calc';
+import s from '../../styles/compare.module.scss';
+import type { CalcDoc } from '../../server/models/Calc';
 import DownloadModal from './DownloadModal';
 
 type Props = { items: CalcDoc[] };

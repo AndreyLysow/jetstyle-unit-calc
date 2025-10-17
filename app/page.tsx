@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import Hero from '@/components/Hero';
-import UnitCalc from '@/components/unitcalc';
-import EmailDownloadModal from '@/components/EmailDownloadModal';
-import CallbackModal from '@/components/CallbackModal';
-import UEInfo from '@/components/UEInfo';
+import Hero from '../components/Hero';
+import UnitCalc from '../components/unitcalc';
+import EmailDownloadModal from '../components/EmailDownloadModal';
+import CallbackModal from '../components/CallbackModal';
+import UEInfo from '../components/UEInfo';
 
 export default function Page() {
   const [showEmail, setShowEmail] = useState(false);

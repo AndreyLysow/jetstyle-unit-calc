@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import s from '@/styles/downloadModal.module.scss';
+import s from '../../styles/downloadModal.module.scss';
 
 type Row = {
   title: string;

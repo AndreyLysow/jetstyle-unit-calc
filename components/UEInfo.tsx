@@ -1,6 +1,6 @@
 'use client';
 
-import s from '@/styles/ueinfo.module.scss';
+import s from '../styles/ueinfo.module.scss';
 
 type Props = { onConsult: () => void };
 

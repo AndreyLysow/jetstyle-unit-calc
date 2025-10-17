@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import s from '@/styles/cookie-bar.module.scss';
+import s from '../styles/cookie-bar.module.scss';
 
 const KEY = 'cookie-consent:v1';
 

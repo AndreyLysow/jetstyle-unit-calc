@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import t from '@/styles/tooltip.module.scss';
+import t from '../styles/tooltip.module.scss';
 
 export default function Tooltip({
   anchor,

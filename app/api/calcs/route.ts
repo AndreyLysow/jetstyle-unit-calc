@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbConnect } from "@/lib/mongodb";
-import { Calc } from "@/server/models/Calc";
+import { dbConnect } from "../../../lib/mongodb";
+import { Calc } from "../../../server/models/Calc";
 
 // какие поля должны быть ЧИСЛАМИ
 const NUMERIC_FIELDS = [
