@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main id="main-content">{children}</main>
         <Footer />
-        <CookieModal /> {/* ← НЕ комментируем 🙂 */}
+        <CookieModal /> 
       </body>
     </html>
   );

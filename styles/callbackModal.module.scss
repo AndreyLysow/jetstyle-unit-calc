@@ -1,0 +1,196 @@
+/* фон остаётся как есть */
+.backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(15, 32, 51, .45);
+	display: grid;
+	place-items: center;
+	z-index: 1000;
+}
+
+/* коробка по макету: 716×~626 */
+.modal {
+	position: relative;
+	width: 716px;
+	/* фикс. ширина как в фигме */
+	max-width: calc(100% - 24px);
+	background: #fff;
+	border: 1px solid #E6EDF7;
+	border-radius: 12px;
+	box-shadow: 0 24px 80px rgba(7, 45, 68, .25);
+	padding: 20px 22px 16px;
+	/* как в макете */
+}
+
+.close {
+	position: absolute;
+	top: 8px;
+	right: 10px;
+	width: 28px;
+	height: 28px;
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+	color: #6B7C92;
+	font-size: 22px;
+	line-height: 1;
+}
+
+.title {
+	margin: 4px 0 2px;
+	font-weight: 800;
+	font-size: 18px;
+	color: #0F2033;
+}
+
+.subtitle {
+	margin: 0 0 14px;
+	color: #0F2033;
+	font-size: 14px;
+}
+
+/* сетка формы и двухколоночная шапка */
+.form {
+	display: grid;
+	gap: 12px;
+}
+
+.row2 {
+	display: grid;
+	gap: 12px;
+}
+
+@media (min-width: 640px) {
+	.row2 {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+.label {
+	display: grid;
+	gap: 6px;
+	font-size: 13px;
+	color: #0F2033;
+}
+
+.input {
+	height: 44px;
+	padding: 0 12px;
+	border: 1px solid #DFE7F2;
+	border-radius: 8px;
+	background: #fff;
+	font-size: 14px;
+	color: #0F2033;
+	transition: border-color .12s ease, box-shadow .12s ease;
+}
+
+.input:focus {
+	outline: none;
+	border-color: #EA2333;
+	box-shadow: 0 0 0 3px rgba(234, 35, 51, .12);
+}
+
+.textarea {
+	height: 120px;
+	padding: 10px 12px;
+	resize: vertical;
+}
+
+/* Кнопка «Добавить файл» по макету — белая, с красной рамкой, иконка слева */
+.fileBtn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	height: 44px;
+	border: 1px solid #F0C8CE;
+	border-radius: 8px;
+	color: #EA2333;
+	background: #fff;
+	cursor: pointer;
+	font-weight: 700;
+}
+
+.fileBtn input {
+	display: none;
+}
+
+.paperclip {
+	font-size: 16px;
+}
+
+/* сообщения */
+.error {
+	background: #FFF2F2;
+	color: #D83B3B;
+	border: 1px solid #F3C1C1;
+	border-radius: 8px;
+	padding: 8px 10px;
+	font-size: 13px;
+}
+
+.ok {
+	background: #F0FFF5;
+	color: #16A34A;
+	border: 1px solid #C7F0D5;
+	border-radius: 8px;
+	padding: 8px 10px;
+	font-size: 13px;
+}
+
+/* низ формы — две кнопки */
+.btnRow {
+	display: grid;
+	gap: 10px;
+}
+
+@media (min-width: 640px) {
+	.btnRow {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+.btnPrimary,
+.btnGhost {
+	height: 44px;
+	padding: 0 18px;
+	border-radius: 8px;
+	font-weight: 800;
+	font-size: 14px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	cursor: pointer;
+}
+
+.btnPrimary {
+	background: #EA2333;
+	color: #fff;
+	border: 1px solid #EA2333;
+	box-shadow: 0 6px 24px rgba(234, 35, 51, .25);
+}
+
+.btnPrimary:disabled {
+	opacity: .7;
+	cursor: default;
+}
+
+.btnGhost {
+	background: #fff;
+	color: #EA2333;
+	border: 1px solid #F0C8CE;
+}
+
+.note {
+	margin: 6px 0 0;
+	color: #6B7C92;
+	font-size: 12px;
+}
+
+/* мобильные отступы */
+@media (max-width: 480px) {
+	.modal {
+		padding: 16px 14px;
+	}
+}

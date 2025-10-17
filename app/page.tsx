@@ -5,6 +5,7 @@ import Hero from '@/components/Hero';
 import UnitCalc from '@/components/unitcalc';
 import EmailDownloadModal from '@/components/EmailDownloadModal';
 import CallbackModal from '@/components/CallbackModal';
+import UEInfo from '@/components/UEInfo';
 
 export default function Page() {
   const [showEmail, setShowEmail] = useState(false);
@@ -19,14 +20,16 @@ export default function Page() {
             <UnitCalc onDownload={() => setShowEmail(true)} />
           </div>
 
-          <div style={{ height: 18 }} />
-          <button className="btn btn--ghost" onClick={() => setShowCallback(true)}>
-            Записаться на консультацию
-          </button>
+          {/* Новый блок — сразу после расчётов */}
+          <UEInfo onConsult={() => setShowCallback(true)} />
         </div>
 
-        {showEmail ? <EmailDownloadModal onClose={() => setShowEmail(false)} /> : null}
-        {showCallback ? <CallbackModal onClose={() => setShowCallback(false)} /> : null}
+        {showEmail && (
+          <EmailDownloadModal onClose={() => setShowEmail(false)} />
+        )}
+        {showCallback && (
+          <CallbackModal onClose={() => setShowCallback(false)} />
+        )}
       </main>
     </>
   );
