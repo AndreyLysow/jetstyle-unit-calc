@@ -1,0 +1,50 @@
+.host {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* чтобы «якорь» не переносился странно */
+  vertical-align: middle;
+}
+
+.tip {
+  position: fixed;            /* чтобы не резалось родителями */
+  z-index: 9999;
+  top: auto;
+  bottom: auto;
+  /* left выставляем скриптом */
+  background: #fff;
+  border: 1px solid #e7ecf3;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(7,45,68,.18);
+  padding: 10px 12px;
+  color: #0f2033;
+  line-height: 1.35;
+  white-space: normal;        /* ✅ перенос строк */
+  word-break: break-word;     /* ✅ длинные слова */
+}
+
+.bottom { margin-top: 8px; transform: translateY(6px); }
+.top    { transform: translateY(-6px); }
+
+.head {
+  font-weight: 800;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.body {
+  font-size: 13px;
+  color: #24384e;
+}
+
+/* стрелочка */
+.arrow {
+  position: absolute;
+  width: 10px; height: 10px;
+  background: #fff;
+  border-left: 1px solid #e7ecf3;
+  border-top: 1px solid #e7ecf3;
+  transform: rotate(45deg);
+}
+.bottom .arrow { top: -6px; left: 24px; }
+.top .arrow    { bottom: -6px; left: 24px; transform: rotate(225deg); }

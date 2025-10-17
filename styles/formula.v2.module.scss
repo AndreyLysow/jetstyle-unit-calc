@@ -412,3 +412,91 @@
 		font-size: 9px;
 	}
 }
+
+/* --- Тултипы: не меняем раскладку, иконка вне потока --- */
+/* чтобы пузырьки могли выходить наружу */
+.formula {
+	overflow: visible;
+}
+
+/* родитель .box уже есть — просто дадим ему контекст */
+.box {
+	position: relative;
+}
+
+/* общий стиль подсказки */
+.tip {
+	position: absolute;
+	left: 0;
+	bottom: calc(100% + 8px);
+	z-index: 20;
+	max-width: 448px;
+	padding: 10px 12px;
+	background: #fff;
+	border: 1px solid #e6edf7;
+	border-radius: 8px;
+	box-shadow: 0 8px 26px rgba(7, 45, 68, .15);
+	color: #0f2033;
+	font-size: 12px;
+	line-height: 1.35;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(4px);
+	transition: .16s ease;
+	pointer-events: none;
+
+	/* стрелочка */
+	&::after {
+		content: "";
+		position: absolute;
+		left: 18px;
+		top: 100%;
+		border: 7px solid transparent;
+		border-top-color: #fff;
+		filter: drop-shadow(0 1px 0 #e6edf7);
+	}
+}
+
+/* показываем при ховере на сам label (поле/значение) */
+.box:hover .tip,
+.pppuValue:hover .tip,
+.au:hover>.tip {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+
+/* чтобы PPPU тоже был контекстом для абсолютной подсказки */
+.pppuValue {
+	position: relative;
+}
+
+/* AU: дать контекст и не клипать */
+.au {
+	position: relative;
+	/* <— важно для абсолютной .tip */
+	overflow: visible;
+	/* на всякий пожарный */
+}
+
+/* AU: подсказка выравнивается так же, как у инпутов слева */
+.au>.tip {
+	left: 12px;
+	/* не прилипать к краю */
+	bottom: calc(100% + 8px);
+	/* над карточкой */
+}
+
+/* стрелочка для AU */
+.au>.tip::after {
+	left: 26px;
+	/* совместить со смещением */
+}
+
+/* Показывать при наведении на label AU, при фокусе внутри (клавиатура) */
+.au:hover>.tip,
+.au:focus-within>.tip {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
