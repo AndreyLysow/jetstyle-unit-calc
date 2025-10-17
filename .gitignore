@@ -1,0 +1,19 @@
+# deps / билд / кеши
+node_modules/
+.pnp/
+.pnp.js
+.pnpm-store/
+pnpm-store/
+.next/
+dist/
+out/
+build/
+.cache/
+.turbo/
+
+# тесты/линт/локальные файлы
+coverage/
+.DS_Store
+*.log
+.env
+.env.*
