@@ -7,17 +7,18 @@ import MetricsSection from './MetricsSection';
 import CompareResults from './CompareResults';
 import type { CalcDoc } from '../../server/models/Calc';
 
-type Inputs = {
-  cpc: number;
-  cr1: number;
-  cr2: number;
-  avp: number;
-  cogs: number;
-  ret: number;
-  au: number;
+/** Входные параметры формулы */
+type CalculationInputs = {
+  cpc: number;   // Cost Per Click
+  cr1: number;   // Conversion Rate 1
+  cr2: number;   // Conversion Rate 2
+  avp: number;   // Average Purchase
+  cogs: number;  // Cost of Goods Sold
+  ret: number;   // Retention (количество покупок на клиента)
+  au: number;    // Acquired Users
 };
 
-const DEFAULT_INPUTS: Inputs = {
+const DEFAULT_CALC_INPUTS: CalculationInputs = {
   cpc: 14,
   cr1: 2.43,
   cr2: 53,
@@ -27,76 +28,107 @@ const DEFAULT_INPUTS: Inputs = {
   au: 10000,
 };
 
-const fmtMoney = (n?: number) =>
-  Number(n).toLocaleString('ru-RU', {
+/** Форматирование денег */
+const formatMoney = (value?: number) =>
+  Number(value).toLocaleString('ru-RU', {
     style: 'currency',
     currency: 'RUB',
     maximumFractionDigits: 2,
   });
 
-const fmt2 = (n?: number) =>
-  Number(n ?? 0).toLocaleString('ru-RU', {
+/** Форматирование до 2 знаков */
+const format2 = (value?: number) =>
+  Number(value ?? 0).toLocaleString('ru-RU', {
     maximumFractionDigits: 2,
     minimumFractionDigits: 2,
   });
 
-const safeDiv = (num: number, den: number) => (den ? num / den : 0);
+/** Безопасное деление (деление на 0 -> 0) */
+const safeDivide = (numerator: number, denominator: number) =>
+  denominator ? numerator / denominator : 0;
 
 export default function UnitCalc() {
-  const [title, setTitle] = useState('Новый расчёт');
-  const [showMore, setShowMore] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
-  const [showSaved, setShowSaved] = useState(true);
-  const [v, setV] = useState<Inputs>(DEFAULT_INPUTS);
+  // UI-состояние
+  const [calcTitle, setCalcTitle] = useState('Новый расчёт');
+  const [isMoreMetricsOpen, setIsMoreMetricsOpen] = useState(true);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isSavedVisible, setIsSavedVisible] = useState(true);
 
-  const onNum =
-    (k: keyof Inputs) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      const raw = String(e.target.value).replace(',', '.');
-      const val = Number(raw);
-      setV((p) => ({ ...p, [k]: Number.isFinite(val) ? val : 0 }));
+  // Значения инпутов формулы
+  const [inputs, setInputs] = useState<CalculationInputs>(DEFAULT_CALC_INPUTS);
+
+  /** Обработчик числовых полей */
+  const handleNumberChange =
+    (key: keyof CalculationInputs) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const normalized = String(e.target.value).replace(',', '.');
+      const numeric = Number(normalized);
+      setInputs((prev) => ({ ...prev, [key]: Number.isFinite(numeric) ? numeric : 0 }));
     };
 
-  /* ===== вычисления ===== */
+  /* ================== ВЫЧИСЛЕНИЯ ================== */
   const leads = useMemo(
-    () => Math.round(safeDiv(v.au * v.cr1, 100)),
-    [v.au, v.cr1],
+    () => Math.round(safeDivide(inputs.au * inputs.cr1, 100)),
+    [inputs.au, inputs.cr1],
   );
+
   const buyers = useMemo(
-    () => Math.round(safeDiv(leads * v.cr2, 100)),
-    [leads, v.cr2],
+    () => Math.round(safeDivide(leads * inputs.cr2, 100)),
+    [leads, inputs.cr2],
   );
-  const margin = useMemo(() => v.avp - v.cogs, [v.avp, v.cogs]);
-  const ltv = useMemo(() => margin * v.ret, [margin, v.ret]);
-  const cpa = useMemo(() => safeDiv(v.cpc, v.cr1 / 100), [v.cpc, v.cr1]);
-  const cppu = useMemo(() => safeDiv(cpa, v.cr2 / 100), [cpa, v.cr2]);
+
+  const unitMargin = useMemo(
+    () => inputs.avp - inputs.cogs,
+    [inputs.avp, inputs.cogs],
+  );
+
+  const ltv = useMemo(() => unitMargin * inputs.ret, [unitMargin, inputs.ret]);
+
+  const cpa = useMemo(
+    () => safeDivide(inputs.cpc, inputs.cr1 / 100),
+    [inputs.cpc, inputs.cr1],
+  );
+
+  const cppu = useMemo(() => safeDivide(cpa, inputs.cr2 / 100), [cpa, inputs.cr2]);
+
   const pppu = useMemo(() => ltv - cppu, [ltv, cppu]);
-  const adSpend = useMemo(() => v.au * v.cpc, [v.au, v.cpc]);
+
+  const adSpend = useMemo(() => inputs.au * inputs.cpc, [inputs.au, inputs.cpc]);
+
   const revenue = useMemo(
-    () => buyers * v.avp * v.ret,
-    [buyers, v.avp, v.ret],
+    () => buyers * inputs.avp * inputs.ret,
+    [buyers, inputs.avp, inputs.ret],
   );
+
   const grossProfit = useMemo(
-    () => buyers * margin * v.ret,
-    [buyers, margin, v.ret],
+    () => buyers * unitMargin * inputs.ret,
+    [buyers, unitMargin, inputs.ret],
   );
-  const opProfit = useMemo(
+
+  const operatingProfit = useMemo(
     () => grossProfit - adSpend,
     [grossProfit, adSpend],
   );
-  const thrCpc = useMemo(() => safeDiv(grossProfit, v.au), [grossProfit, v.au]);
-  const thrCpa = useMemo(
-    () => safeDiv(adSpend, buyers || 1),
-    [adSpend, buyers],
-  );
-  const arppu = useMemo(() => v.avp * v.ret, [v.avp, v.ret]);
-  const arpu = useMemo(
-    () => safeDiv(buyers * v.avp * v.ret, v.au),
-    [buyers, v.avp, v.ret, v.au],
+
+  const thresholdCpc = useMemo(
+    () => safeDivide(grossProfit, inputs.au),
+    [grossProfit, inputs.au],
   );
 
-  const metricsData = {
-    thrCpc,
-    thrCpa,
+  const thresholdCpa = useMemo(
+    () => safeDivide(adSpend, buyers || 1),
+    [adSpend, buyers],
+  );
+
+  const arppu = useMemo(() => inputs.avp * inputs.ret, [inputs.avp, inputs.ret]);
+
+  const arpu = useMemo(
+    () => safeDivide(buyers * inputs.avp * inputs.ret, inputs.au),
+    [buyers, inputs.avp, inputs.ret, inputs.au],
+  );
+
+  const metricsForTable = {
+    thrCpc: thresholdCpc,
+    thrCpa: thresholdCpa,
     arppu,
     arpu,
     cpa,
@@ -106,29 +138,29 @@ export default function UnitCalc() {
     adSpend,
     grossProfit,
     revenue,
-    opProfit,
-    margin,
+    opProfit: operatingProfit,
+    margin: unitMargin,
     ltv,
     pppu,
-    ret: v.ret,
-    avgOrder: v.avp,
+    ret: inputs.ret,
+    avgOrder: inputs.avp,
   };
 
-  /* ===== CRUD ===== */
-  const [items, setItems] = useState<CalcDoc[]>([]);
-  const [currentId, setCurrentId] = useState<string | null>(null);
+  /* ================== CRUD ДЛЯ СОХРАНЕНИЙ ================== */
+  const [savedCalcs, setSavedCalcs] = useState<CalcDoc[]>([]);
+  const [currentCalcId, setCurrentCalcId] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
       const res = await fetch('/api/calcs', { cache: 'no-store' });
-      setItems(res.ok ? await res.json() : []);
+      setSavedCalcs(res.ok ? await res.json() : []);
     })();
   }, []);
 
-  const buildPayload = (t: string) => ({
-    title: t,
-    ...v,
-    margin,
+  const buildPayload = (title: string) => ({
+    title,
+    ...inputs,
+    margin: unitMargin,
     ltv,
     cppu,
     pppu,
@@ -137,127 +169,107 @@ export default function UnitCalc() {
     adSpend,
     revenue,
     grossProfit,
-    opProfit,
+    opProfit: operatingProfit,
   });
 
-  const saveNew = async () => {
+  const createNewCalc = async () => {
     const res = await fetch('/api/calcs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(buildPayload(title)),
+      body: JSON.stringify(buildPayload(calcTitle)),
     });
     if (!res.ok) return;
     const created: CalcDoc = await res.json();
-    setItems((p) => [...p, created]);
-    setCurrentId(created._id);
-    setIsEditing(false);
+    setSavedCalcs((prev) => [...prev, created]);
+    setCurrentCalcId(created._id);
+    setIsEditMode(false);
   };
 
-  const saveChanges = async () => {
-    if (!currentId) return;
-    const res = await fetch(`/api/calcs/${currentId}`, {
+  const saveExistingCalc = async () => {
+    if (!currentCalcId) return;
+    const res = await fetch(`/api/calcs/${currentCalcId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(buildPayload(title)),
+      body: JSON.stringify(buildPayload(calcTitle)),
     });
     if (!res.ok) return;
     const updated: CalcDoc = await res.json();
-    setItems((prev) => prev.map((i) => (i._id === updated._id ? updated : i)));
-    setIsEditing(false);
+    setSavedCalcs((prev) => prev.map((c) => (c._id === updated._id ? updated : c)));
+    setIsEditMode(false);
   };
 
-  const duplicate = async () => {
-    const dupTitle = title.trim() ? `${title} (копия)` : 'Расчёт (копия)';
+  const duplicateCalc = async () => {
+    const newTitle = calcTitle.trim() ? `${calcTitle} (копия)` : 'Расчёт (копия)';
     const res = await fetch('/api/calcs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(buildPayload(dupTitle)),
+      body: JSON.stringify(buildPayload(newTitle)),
     });
     if (!res.ok) return;
     const created: CalcDoc = await res.json();
-    setItems((p) => [...p, created]);
-    setCurrentId(created._id);
-    setTitle(dupTitle);
+    setSavedCalcs((prev) => [...prev, created]);
+    setCurrentCalcId(created._id);
+    setCalcTitle(newTitle);
   };
 
-  const removeCurrent = async () => {
-    if (!currentId) return;
-    const res = await fetch(`/api/calcs/${currentId}`, { method: 'DELETE' });
+  const deleteCurrentCalc = async () => {
+    if (!currentCalcId) return;
+    const res = await fetch(`/api/calcs/${currentCalcId}`, { method: 'DELETE' });
     if (!res.ok) return;
-    setItems((prev) => prev.filter((i) => i._id !== currentId));
-    setCurrentId(null);
-    setIsEditing(false);
+    setSavedCalcs((prev) => prev.filter((c) => c._id !== currentCalcId));
+    setCurrentCalcId(null);
+    setIsEditMode(false);
   };
 
-  const startNew = () => {
-    setV(DEFAULT_INPUTS);
-    setTitle('Новый расчёт');
-    setCurrentId(null);
-    setIsEditing(false);
+  const startNewCalc = () => {
+    setInputs(DEFAULT_CALC_INPUTS);
+    setCalcTitle('Новый расчёт');
+    setCurrentCalcId(null);
+    setIsEditMode(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  /* ===== Render ===== */
+  /* ================== РЕНДЕР ================== */
   return (
     <div className={styles.wrap}>
       <div className={styles.panel}>
-        {/* Шапка */}
+        {/* Заголовок и действия */}
         <div className={styles.headerBar}>
           <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={calcTitle}
+            onChange={(e) => setCalcTitle(e.target.value)}
             className={styles.titleInput}
             placeholder="Введите название расчёта"
           />
           <div className={styles.headerActions}>
-            {isEditing ? (
+            {isEditMode ? (
               <>
-                <button
-                  className={styles.iconBtn}
-                  onClick={saveChanges}
-                  title="Сохранить изменения"
-                >
+                <button className={styles.iconBtn} onClick={saveExistingCalc} title="Сохранить изменения">
                   💾
                 </button>
                 <button
                   className={styles.iconBtn}
                   onClick={() => {
-                    setIsEditing(false);
-                    setCurrentId(null);
+                    setIsEditMode(false);
+                    setCurrentCalcId(null);
                   }}
                   title="Отмена"
                 >
                   ↩︎
                 </button>
-                <button
-                  className={styles.iconBtn}
-                  onClick={removeCurrent}
-                  title="Удалить"
-                >
+                <button className={styles.iconBtn} onClick={deleteCurrentCalc} title="Удалить">
                   🗑
                 </button>
               </>
             ) : (
               <>
-                <button
-                  className={styles.iconBtn}
-                  onClick={saveNew}
-                  title="Сохранить"
-                >
+                <button className={styles.iconBtn} onClick={createNewCalc} title="Сохранить">
                   💾
                 </button>
-                <button
-                  className={styles.iconBtn}
-                  onClick={duplicate}
-                  title="Дублировать"
-                >
+                <button className={styles.iconBtn} onClick={duplicateCalc} title="Дублировать">
                   ⎘
                 </button>
-                <button
-                  className={styles.iconBtn}
-                  onClick={removeCurrent}
-                  title="Удалить"
-                >
+                <button className={styles.iconBtn} onClick={deleteCurrentCalc} title="Удалить">
                   🗑
                 </button>
               </>
@@ -267,53 +279,53 @@ export default function UnitCalc() {
 
         {/* Формула */}
         <FormulaCard
-          v={v}
-          onChange={onNum}
-          margin={margin}
+          v={inputs}
+          onChange={handleNumberChange}
+          margin={unitMargin}
           ltv={ltv}
           cppu={cppu}
           pppu={pppu}
-          fmtR={fmtMoney}
+          fmtR={formatMoney}
         />
 
         {/* Итого */}
         <div className={styles.totalRow}>
           <span className={styles.totalLabel}>Итого:</span>
-          <span className={styles.totalValue}>{fmtMoney(opProfit)}</span>
+          <span className={styles.totalValue}>{formatMoney(operatingProfit)}</span>
         </div>
 
         {/* Остальные метрики */}
         <MetricsSection
-          showMore={showMore}
-          toggle={() => setShowMore((s) => !s)}
-          fmtR={fmtMoney}
-          data={metricsData}
+          showMore={isMoreMetricsOpen}
+          toggle={() => setIsMoreMetricsOpen((s) => !s)}
+          fmtR={formatMoney}
+          data={metricsForTable}
         />
 
-        {/* Сохранённые */}
-        {items.length > 0 && showSaved && (
+        {/* Сохранённые расчёты */}
+        {savedCalcs.length > 0 && isSavedVisible && (
           <div className={styles.savedBlock}>
             <div className={styles.savedTitle}>Сохранённые расчёты</div>
             <ul className={styles.cardList}>
-              {items.map((it) => (
-                <li key={it._id} className={styles.card}>
+              {savedCalcs.map((doc) => (
+                <li key={doc._id} className={styles.card}>
                   <div className={styles.cardHeader}>
-                    <div className={styles.cardTitle}>{it.title}</div>
+                    <div className={styles.cardTitle}>{doc.title}</div>
                     <button
                       className={styles.editLink}
                       onClick={() => {
-                        setCurrentId(it._id);
-                        setTitle(it.title);
-                        setV({
-                          cpc: it.cpc,
-                          cr1: it.cr1,
-                          cr2: it.cr2,
-                          avp: it.avp,
-                          cogs: it.cogs,
-                          ret: it.ret,
-                          au: it.au,
+                        setCurrentCalcId(doc._id);
+                        setCalcTitle(doc.title);
+                        setInputs({
+                          cpc: doc.cpc,
+                          cr1: doc.cr1,
+                          cr2: doc.cr2,
+                          avp: doc.avp,
+                          cogs: doc.cogs,
+                          ret: doc.ret,
+                          au: doc.au,
                         });
-                        setIsEditing(true);
+                        setIsEditMode(true);
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
                     >
@@ -324,19 +336,19 @@ export default function UnitCalc() {
                   <div className={styles.cardFormula}>
                     <span className={styles.fMinus}>–</span>
                     <span>(</span>
-                    <b>{fmt2(it.cpc)}</b>
+                    <b>{format2(doc.cpc)}</b>
                     <span> / </span>
-                    <b>{fmt2(it.cr1)}</b>
+                    <b>{format2(doc.cr1)}</b>
                     <span> / </span>
-                    <b>{fmt2(it.cr2)}</b>
+                    <b>{format2(doc.cr2)}</b>
                     <span>) + (</span>
-                    <b>{fmtMoney(it.avp)}</b>
+                    <b>{formatMoney(doc.avp)}</b>
                     <span> – </span>
-                    <b>{fmtMoney(it.cogs)}</b>
+                    <b>{formatMoney(doc.cogs)}</b>
                     <span>) × </span>
-                    <b>{fmt2(it.ret)}</b>
+                    <b>{format2(doc.ret)}</b>
                     <span className={styles.eq}>=</span>
-                    <b className={styles.pppuValue}>{fmtMoney(it.pppu)}</b>
+                    <b className={styles.pppuValue}>{formatMoney(doc.pppu)}</b>
                   </div>
                 </li>
               ))}
@@ -344,21 +356,19 @@ export default function UnitCalc() {
           </div>
         )}
 
-        {/* Низ: слева ссылка, справа — «Новый расчёт» */}
+        {/* Нижняя панель: показать/скрыть и «Новый расчёт» */}
         <div className={styles.controlsRow}>
-          {items.length > 0 && (
+          {savedCalcs.length > 0 && (
             <button
               type="button"
               className={styles.linkBtn}
-              onClick={() => setShowSaved((s) => !s)}
+              onClick={() => setIsSavedVisible((s) => !s)}
             >
-              {showSaved
-                ? 'Скрыть сохранённые расчёты'
-                : 'Показать сохранённые расчёты'}
+              {isSavedVisible ? 'Скрыть сохранённые расчёты' : 'Показать сохранённые расчёты'}
             </button>
           )}
 
-          <button className={styles.btnNew} onClick={startNew}>
+          <button className={styles.btnNew} onClick={startNewCalc}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z" />
             </svg>
@@ -367,7 +377,7 @@ export default function UnitCalc() {
         </div>
 
         {/* Сравнение результатов */}
-        <CompareResults items={items} />
+        <CompareResults items={savedCalcs} />
       </div>
     </div>
   );
