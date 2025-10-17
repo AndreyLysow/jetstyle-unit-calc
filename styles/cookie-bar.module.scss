@@ -1,0 +1,78 @@
+/* Полоса-баннер снизу, строго 835×60 в десктопе */
+.bar {
+	position: fixed;
+	left: 50%;
+	bottom: 18px;
+	transform: translateX(-50%);
+	width: 835px;
+	height: 60px;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 18px;
+
+	background: #fff;
+	border: 1px solid #e1e6ee;
+	
+	box-shadow: 0 8px 24px rgba(7, 45, 68, 0.15);
+	padding: 0 22px 0 24px;
+
+	font-family: 'Inter', sans-serif;
+	z-index: 1000;
+}
+
+/* Текст слева */
+.text {
+	margin: 0;
+	flex: 1 1 auto;
+	color: #0f2033;
+	font-size: 16px;
+	font-weight: 400;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Белая кнопка с красным текстом и рамкой */
+.btn {
+	flex: 0 0 auto;
+	height: 38px;
+	padding: 0 28px;
+	border: 2px solid #d83b3b;
+	background: #fff;
+	color: #d83b3b;
+	font-weight: 800;
+	font-size: 16px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+
+	&:hover {
+		background: #d83b3b;
+		color: #fff;
+		box-shadow: 0 6px 18px rgba(216, 59, 59, 0.25);
+	}
+
+	&:active {
+		transform: translateY(1px);
+	}
+}
+
+/* Адаптив */
+@media (max-width: 900px) {
+	.bar {
+		width: calc(100% - 24px);
+		bottom: 12px;
+		padding-inline: 16px;
+	}
+
+	.text {
+		font-size: 14px;
+	}
+
+	.btn {
+		height: 34px;
+		padding: 0 20px;
+		font-size: 14px;
+	}
+}

@@ -1,8 +1,50 @@
+/* ===== Контейнер блока ===== */
 .wrap {
 	margin-top: 12px;
 }
 
-/* Кнопка-заголовок без «пилюли»: круглая стрелка + текст */
+/* ===== Шапка: заголовок + кнопки действий ===== */
+.headerLine {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.actions {
+	display: inline-flex;
+	gap: 8px;
+}
+
+.aBtn,
+.aBtnPrimary {
+	height: 34px;
+	padding: 0 12px;
+	border-radius: 8px;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+	border: 1px solid var(--border, #dfe7f2);
+	background: #fff;
+	color: var(--text, #0f2033);
+	transition: border-color .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease;
+}
+
+.aBtn:hover {
+	border-color: #cdd9ee;
+	box-shadow: 0 2px 10px rgba(15, 32, 51, .06);
+}
+
+.aBtnPrimary {
+	border-color: transparent;
+	background: var(--blue, #2a74ff);
+	color: #fff;
+}
+
+.aBtnPrimary:hover {
+	filter: brightness(1.05);
+}
+
+/* ===== Кнопка-заголовок (стрелка + текст) ===== */
 .headerBtn {
 	display: inline-flex;
 	align-items: center;
@@ -45,14 +87,14 @@
 
 /* вверх */
 
-/* текст заголовка — НЕ жирный (как просили) */
+/* текст заголовка — НЕ жирный */
 .headerText {
 	font-size: 14px;
 	font-weight: 400;
 	user-select: none;
 }
 
-/* плавное раскрытие */
+/* ===== Анимация раскрытия ===== */
 .collapse {
 	overflow: hidden;
 	transition: max-height .4s ease, opacity .25s ease;
@@ -67,12 +109,12 @@
 	opacity: 0;
 }
 
-/* внутренние отступы, чтобы контент не упирался в края */
+/* внутренние отступы */
 .inner {
 	padding: 8px 16px 16px;
 }
 
-/* сетка метрик */
+/* ===== Сетка метрик ===== */
 .grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(240px, 1fr));
@@ -92,6 +134,7 @@
 	}
 }
 
+/* Строка: лейбл + значение/редактор */
 .row {
 	display: grid;
 	grid-template-columns: 1fr auto;
@@ -105,14 +148,67 @@
 	border-bottom: none;
 }
 
+/* подпись */
 .label {
 	font-size: 14px;
 	color: var(--text, #0f2033);
 }
 
+/* значение */
 .val {
 	font-size: 14px;
 	font-weight: 700;
 	color: var(--text, #0f2033);
 	white-space: nowrap;
+}
+
+/* ===== Режим редактирования ===== */
+.editRow {}
+
+/* ячейка редактора: input + подсказка + сброс */
+.editCell {
+	display: grid;
+	grid-template-columns: minmax(140px, 1fr) auto auto;
+	align-items: center;
+	gap: 8px;
+}
+
+/* инпут */
+.input {
+	height: 34px;
+	padding: 0 10px;
+	border: 1px solid var(--border, #dfe7f2);
+	border-radius: 8px;
+	background: #fff;
+	font-size: 14px;
+	color: var(--text, #0f2033);
+	min-width: 140px;
+	width: 100%;
+}
+
+.input:focus {
+	outline: 2px solid rgba(42, 116, 255, .2);
+	border-color: #a9c4f3;
+}
+
+/* форматированная подсказка справа (рубли/округление) */
+.hint {
+	font-size: 12px;
+	color: var(--muted, #6b7c92);
+	white-space: nowrap;
+}
+
+/* сброс поля */
+.clearBtn {
+	height: 28px;
+	padding: 0 8px;
+	border: 1px solid var(--border, #dfe7f2);
+	border-radius: 6px;
+	background: #fff;
+	color: #6b7c92;
+	cursor: pointer;
+}
+
+.clearBtn:hover {
+	background: #f6f9ff;
 }

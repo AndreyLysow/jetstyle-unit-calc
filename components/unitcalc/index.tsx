@@ -7,7 +7,17 @@ import MetricsSection from './MetricsSection';
 import type { CalcDoc } from '@/server/models/Calc';
 
 type Inputs = {
-  cpc: number; cr1: number; cr2: number; avp: number; cogs: number; ret: number; au: number;
+  cpc: number;
+  cr1: number;
+  cr2: number;
+  avp: number;
+  cogs: number;
+  ret: number;
+  au: number;
+};
+
+const DEFAULT_INPUTS: Inputs = {
+  cpc: 14, cr1: 2.43, cr2: 53, avp: 1050, cogs: 250, ret: 1.9, au: 10000,
 };
 
 const fmtMoney = (n?: number) =>
@@ -17,14 +27,12 @@ const fmt2 = (n?: number) =>
 
 const safeDiv = (num: number, den: number) => (den ? num / den : 0);
 
-export default function UnitCalc({ onDownload }: { onDownload?: () => void }) {
+export default function UnitCalc() {
   const [title, setTitle] = useState('Новый расчёт');
   const [showMore, setShowMore] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-
-  const [v, setV] = useState<Inputs>({
-    cpc: 14, cr1: 2.43, cr2: 53, avp: 1050, cogs: 250, ret: 1.9, au: 10000,
-  });
+  const [showSaved, setShowSaved] = useState(true);
+  const [v, setV] = useState<Inputs>(DEFAULT_INPUTS);
 
   const onNum = (k: keyof Inputs) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = String(e.target.value).replace(',', '.');
@@ -32,7 +40,7 @@ export default function UnitCalc({ onDownload }: { onDownload?: () => void }) {
     setV(p => ({ ...p, [k]: Number.isFinite(val) ? val : 0 }));
   };
 
-  /* ---- вычисления ---- */
+  /* ===== вычисления ===== */
   const leads       = useMemo(() => Math.round(safeDiv(v.au * v.cr1, 100)), [v.au, v.cr1]);
   const buyers      = useMemo(() => Math.round(safeDiv(leads * v.cr2, 100)), [leads, v.cr2]);
   const margin      = useMemo(() => v.avp - v.cogs, [v.avp, v.cogs]);
@@ -55,7 +63,7 @@ export default function UnitCalc({ onDownload }: { onDownload?: () => void }) {
     ret: v.ret, avgOrder: v.avp,
   };
 
-  /* ---- CRUD ---- */
+  /* ===== CRUD ===== */
   const [items, setItems] = useState<CalcDoc[]>([]);
   const [currentId, setCurrentId] = useState<string | null>(null);
 
@@ -117,7 +125,15 @@ export default function UnitCalc({ onDownload }: { onDownload?: () => void }) {
     setIsEditing(false);
   };
 
-  /* ---- Render ---- */
+  const startNew = () => {
+    setV(DEFAULT_INPUTS);
+    setTitle('Новый расчёт');
+    setCurrentId(null);
+    setIsEditing(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  /* ===== Render ===== */
   return (
     <div className={styles.wrap}>
       <div className={styles.panel}>
@@ -146,16 +162,33 @@ export default function UnitCalc({ onDownload }: { onDownload?: () => void }) {
           </div>
         </div>
 
-        <FormulaCard v={v} onChange={onNum} margin={margin} ltv={ltv} cppu={cppu} pppu={pppu} fmtR={fmtMoney} />
+        {/* Формула */}
+        <FormulaCard
+          v={v}
+          onChange={onNum}
+          margin={margin}
+          ltv={ltv}
+          cppu={cppu}
+          pppu={pppu}
+          fmtR={fmtMoney}
+        />
 
+        {/* Итого */}
         <div className={styles.totalRow}>
           <span className={styles.totalLabel}>Итого:</span>
           <span className={styles.totalValue}>{fmtMoney(opProfit)}</span>
         </div>
 
-        <MetricsSection showMore={showMore} toggle={() => setShowMore(s => !s)} fmtR={fmtMoney} data={metricsData} />
+        {/* Остальные метрики */}
+        <MetricsSection
+          showMore={showMore}
+          toggle={() => setShowMore(s => !s)}
+          fmtR={fmtMoney}
+          data={metricsData}
+        />
 
-        {items.length > 0 && (
+        {/* Сохранённые */}
+        {items.length > 0 && showSaved && (
           <div className={styles.savedBlock}>
             <div className={styles.savedTitle}>Сохранённые расчёты</div>
             <ul className={styles.cardList}>
@@ -177,7 +210,6 @@ export default function UnitCalc({ onDownload }: { onDownload?: () => void }) {
                     </button>
                   </div>
 
-                  {/* Формула как в макете */}
                   <div className={styles.cardFormula}>
                     <span className={styles.fMinus}>–</span>
                     <span>(</span>
@@ -201,8 +233,24 @@ export default function UnitCalc({ onDownload }: { onDownload?: () => void }) {
           </div>
         )}
 
-        <div className={styles.actionsRight}>
-          <button className={styles.btnPrimary} onClick={onDownload}>Скачать расчёты</button>
+        {/* Низ: слева ссылка, справа — «Новый расчёт» */}
+        <div className={styles.controlsRow}>
+          {items.length > 0 && (
+            <button
+              type="button"
+              className={styles.linkBtn}
+              onClick={() => setShowSaved(s => !s)}
+            >
+              {showSaved ? 'Скрыть сохранённые расчёты' : 'Показать сохранённые расчёты'}
+            </button>
+          )}
+
+          <button className={styles.btnNew} onClick={startNew}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z" />
+            </svg>
+            Новый расчёт
+          </button>
         </div>
       </div>
     </div>

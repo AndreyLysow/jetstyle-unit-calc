@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import CookieModal from '@/components/CookieModal'; // ← подключаем
 import '../styles/globals.scss';
 
 export const metadata: Metadata = {
@@ -30,26 +31,23 @@ export const metadata: Metadata = {
     description:
       'Мини-версия калькулятора для быстрой оценки экономики гипотез рекламных каналов.',
   },
-  manifest: '/site.webmanifest', // если добавишь webmanifest в /public
+  manifest: '/site.webmanifest',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru">
       <head>
-        {/* Meta fallback на случай, если Next не внедрит icon-теги */}
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
+        <meta name="theme-color" content="#ffffff" />
       </head>
       <body>
         <Header />
-        {children}
+        <main id="main-content">{children}</main>
         <Footer />
+        <CookieModal /> {/* ← НЕ комментируем 🙂 */}
       </body>
     </html>
   );
