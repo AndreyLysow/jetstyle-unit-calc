@@ -18,6 +18,10 @@ type CalculationInputs = {
   au: number;    // Acquired Users
 };
 
+type UnitCalcProps = {
+  onDownload?: () => void; // опциональный коллбек для открытия модалки
+};
+
 const DEFAULT_CALC_INPUTS: CalculationInputs = {
   cpc: 14,
   cr1: 2.43,
@@ -47,7 +51,7 @@ const format2 = (value?: number) =>
 const safeDivide = (numerator: number, denominator: number) =>
   denominator ? numerator / denominator : 0;
 
-export default function UnitCalc() {
+export default function UnitCalc({ onDownload }: UnitCalcProps) {
   // UI-состояние
   const [calcTitle, setCalcTitle] = useState('Новый расчёт');
   const [isMoreMetricsOpen, setIsMoreMetricsOpen] = useState(true);
