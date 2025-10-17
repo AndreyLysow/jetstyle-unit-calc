@@ -35,4 +35,4 @@ coverage/
 ########################################
 .vscode/
 .idea/
-*.iml
+*.iml.DS_Store
