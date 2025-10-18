@@ -12,8 +12,8 @@ type Props = {
   v: Inputs;
   onChange: (k: keyof Inputs) => (e: React.ChangeEvent<HTMLInputElement>) => void;
   margin: number; ltv: number; cppu: number; pppu: number;
-  fmt?: (n: number) => string;  // новый проп
-  fmtR?: (n: number) => string; // поддержка старого имени
+  fmt?: (n: number) => string;   // новый проп
+  fmtR?: (n: number) => string;  // поддержка старого имени
 };
 
 export default function FormulaCard({
@@ -22,6 +22,25 @@ export default function FormulaCard({
   const format =
     fmt ?? fmtR ?? ((n: number) =>
       n.toLocaleString('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 2 }));
+
+  // Враппер: принимает запятую, в коллбек уходит уже со сменой на точку
+  const handle = (k: keyof Inputs) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const normalized = e.target.value.replace(',', '.');
+    // синтетическое событие того же типа
+    const synthetic = {
+      ...e,
+      target: { ...e.target, value: normalized }
+    } as React.ChangeEvent<HTMLInputElement>;
+    onChange(k)(synthetic);
+  };
+
+  // Общие props для «десятичных» инпутов
+  const decProps = {
+    type: 'text' as const,
+    inputMode: 'decimal' as const,
+    pattern: '^-?\\d*[.,]?\\d*$',
+    autoComplete: 'off' as const,
+  };
 
   return (
     <div className={s.formula}>
@@ -33,7 +52,7 @@ export default function FormulaCard({
         <div className={s.inputsLeft}>
           <label className={s.box}>
             <span className={s.label}>CPC, ₽</span>
-            <input value={v.cpc} onChange={onChange('cpc')} className={s.input} inputMode="decimal" />
+            <input {...decProps} value={v.cpc} onChange={handle('cpc')} className={s.input} />
             <span className={s.tip}>
               <b>Cost Per Click</b><br />
               Стоимость привлечения посетителя — фактические затраты на один клик.
@@ -44,7 +63,7 @@ export default function FormulaCard({
 
           <label className={s.box}>
             <span className={s.label}>CR1, %</span>
-            <input value={v.cr1} onChange={onChange('cr1')} className={s.input} inputMode="decimal" />
+            <input {...decProps} value={v.cr1} onChange={handle('cr1')} className={s.input} />
             <span className={s.tip}>
               <b>Conversion Rate 1</b><br />
               Конверсия из клика в заявку (лид).
@@ -55,7 +74,7 @@ export default function FormulaCard({
 
           <label className={s.box}>
             <span className={s.label}>CR2, %</span>
-            <input value={v.cr2} onChange={onChange('cr2')} className={s.input} inputMode="decimal" />
+            <input {...decProps} value={v.cr2} onChange={handle('cr2')} className={s.input} />
             <span className={s.tip}>
               <b>Conversion Rate 2</b><br />
               Конверсия из заявки в покупку.
@@ -80,7 +99,7 @@ export default function FormulaCard({
           <div className={s.inputsMid}>
             <label className={s.box}>
               <span className={s.label}>AVP, ₽</span>
-              <input value={v.avp} onChange={onChange('avp')} className={s.input} inputMode="decimal" />
+              <input {...decProps} value={v.avp} onChange={handle('avp')} className={s.input} />
               <span className={s.tip}>
                 <b>Average Purchase</b><br />
                 Средний чек за одну покупку.
@@ -91,7 +110,7 @@ export default function FormulaCard({
 
             <label className={s.box}>
               <span className={s.label}>COGS, ₽</span>
-              <input value={v.cogs} onChange={onChange('cogs')} className={s.input} inputMode="decimal" />
+              <input {...decProps} value={v.cogs} onChange={handle('cogs')} className={s.input} />
               <span className={s.tip}>
                 <b>Cost of Goods Sold</b><br />
                 Себестоимость товара/услуги.
@@ -114,7 +133,7 @@ export default function FormulaCard({
         <div className={`${s.group} ${s.ret}`}>
           <label className={s.box}>
             <span className={s.label}>Ret</span>
-            <input value={v.ret} onChange={onChange('ret')} className={s.input} inputMode="decimal" />
+            <input {...decProps} value={v.ret} onChange={handle('ret')} className={s.input} />
             <span className={s.tip}>
               <b>Retention</b><br />
               Среднее число покупок одним клиентом за весь срок жизни.
@@ -142,7 +161,7 @@ export default function FormulaCard({
 
       <label className={s.au}>
         <span className={s.label}>AU</span>
-        <input value={v.au} onChange={onChange('au')} className={s.input} inputMode="numeric" />
+        <input {...decProps} value={v.au} onChange={handle('au')} className={s.input} />
         <span className={s.tip}>
           <b>Acquired Users</b><br />
           Количество привлечённых пользователей.
