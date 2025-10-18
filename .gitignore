@@ -1,38 +1,49 @@
 ########################################
-# Dependencies / build artifacts / caches
+# Node.js / Dependencies
 ########################################
 node_modules/
-.pnp/
-.pnp.js
 .pnpm-store/
 pnpm-store/
+.pnp/
+.pnp.js
+
+########################################
+# Build / Output / Cache
+########################################
 .next/
 dist/
+dist-server/
 out/
 build/
 .cache/
 .turbo/
 
 ########################################
-# Testing / lint / local dev
+# Test / Logs / Temp
 ########################################
 coverage/
-.DS_Store
 *.log
 *.lock
 *.swp
 *.tmp
 
 ########################################
-# Environment variables (keep secrets local)
+# Environment files (keep secrets local)
 ########################################
 .env
 .env.*
-!.env.example   # можно оставить шаблон для документации
+!.env.example  # шаблон для документации
 
 ########################################
-# System / IDE files
+# System / IDE / OS
 ########################################
 .vscode/
 .idea/
-*.iml.DS_Store
+*.iml
+.DS_Store
+
+########################################
+# Local project data
+########################################
+data/
+docker-compose.yml
