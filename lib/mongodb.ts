@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 declare global {
-  // делаем кэш доступным между hot-reload'ами Next.js
   // eslint-disable-next-line no-var
   var _mongoose:
     | {
@@ -12,16 +11,29 @@ declare global {
     | undefined;
 }
 
-/** Собираем финальный URI */
+/** Собираем итоговый Mongo URI корректно, учитывая ?query */
 function makeUri() {
   const raw = process.env.MONGODB_URI;
   if (!raw) throw new Error("Missing MONGODB_URI");
 
-  const db = (process.env.MONGODB_DB || "unitcalc").trim();
-  const hasDbAtEnd = /\/[^/?]+$/.test(raw);
-  if (hasDbAtEnd) return raw;
+  const dbName = (process.env.MONGODB_DB || "unitcalc").trim();
 
-  return `${raw.replace(/\/$/, "")}/${db}`;
+  // Разделяем на base и query (включая ведущий '?')
+  const qPos = raw.indexOf("?");
+  const base = qPos === -1 ? raw : raw.slice(0, qPos);
+  const query = qPos === -1 ? "" : raw.slice(qPos); // '' или строка с '?...'
+
+  // Уже есть БД в конце base? (…/dbname)
+  const hasDbInBase = /\/[^/]+$/.test(base) && !base.endsWith("/");
+
+  if (hasDbInBase) {
+    // URI уже содержит БД — возвращаем исходный (с query)
+    return raw;
+  }
+
+  // Добавляем /<db> строго до query
+  const baseNoSlash = base.replace(/\/$/, "");
+  return `${baseNoSlash}/${dbName}${query}`;
 }
 
 const FINAL_URI = makeUri();
@@ -48,7 +60,6 @@ export async function dbConnect() {
   return cache.conn;
 }
 
-/** Опционально: отключение */
 export async function dbDisconnect() {
   if (mongoose.connection.readyState !== 0) {
     await mongoose.disconnect();
@@ -56,7 +67,7 @@ export async function dbDisconnect() {
   global._mongoose = { conn: null, promise: null, uri: FINAL_URI };
 }
 
-/** Возвращает текущую базу (native MongoDB Db object) */
+/** Текущая нативная DB (MongoDB.Db) */
 export function getDb() {
   const db = mongoose.connection.db;
   if (!db) throw new Error("MongoDB not connected");
