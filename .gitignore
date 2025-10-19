@@ -47,3 +47,8 @@ coverage/
 ########################################
 data/
 docker-compose.yml
+# build artifacts
+/dist/
+/dist-server/
+.next/
+node_modules/
