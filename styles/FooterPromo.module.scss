@@ -1,0 +1,326 @@
+/* ====== Обёртка ====== */
+.wrap {
+	background: #fff;
+	padding: 60px 0 100px;
+	box-shadow: inset 0 1px 0 rgba(0, 0, 0, .05);
+}
+
+/* ====== Полоса подписки ====== */
+.subscribeBar {
+	display: flex;
+	justify-content: center;
+	margin: 0 auto 48px;
+}
+
+.subInner {
+	width: min(1189px, 100% - 32px);
+	min-height: 93px;
+	padding: 16px;
+	border: 1px solid #dfe7f0;
+	border-radius: 8px;
+	background: #fff;
+	box-shadow: 0 6px 22px rgba(7, 45, 68, .08);
+	display: grid;
+	grid-template-columns: 1fr auto;
+	align-items: center;
+	column-gap: 16px;
+}
+
+.subText {
+	font: 600 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Arial;
+	color: #344b5e;
+}
+
+.subForm {
+	display: grid;
+	grid-auto-flow: column;
+	gap: 8px;
+	align-items: center;
+}
+
+.subInput {
+	width: 344px;
+	height: 44px;
+	padding: 0 12px;
+	border: 1px solid #dfe7f0;
+	border-radius: 6px;
+	font-size: 14px;
+	color: #17212a;
+	background: #fff;
+	outline: none;
+	transition: .15s;
+}
+
+.subInput:focus {
+	border-color: #e81c2e;
+	box-shadow: 0 0 0 3px rgba(232, 28, 46, .12);
+}
+
+.subBtn {
+	width: 44px;
+	height: 44px;
+	border-radius: 6px;
+	border: 1px solid #e81c2e;
+	background: #e81c2e;
+	color: #fff;
+	font-weight: 700;
+	display: inline-grid;
+	place-items: center;
+	transition: .15s;
+}
+
+.subBtn:hover {
+	filter: brightness(1.02);
+}
+
+.subBtn:active {
+	transform: translateY(1px);
+}
+
+.subBtn:disabled {
+	opacity: .6;
+	cursor: not-allowed
+}
+
+/* ====== Сетка нижней зоны ====== */
+.grid {
+	width: min(1189px, 100% - 32px);
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: 185px 1fr;
+	column-gap: 40px;
+	align-items: start;
+}
+
+.logoCol {
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+}
+
+.logo {
+	width: 185px;
+	height: auto
+}
+
+/* ====== Карточка формы ====== */
+.card {
+	width: min(716px, 100%);
+	min-height: 626px;
+	background: #fff;
+	border: 1px solid #e2eaf2;
+	border-radius: 3px;
+	box-shadow: 0 12px 36px rgba(6, 68, 105, .12), 0 2px 6px rgba(7, 45, 68, .06);
+}
+
+.cardInner {
+	padding: 22px 24px;
+}
+
+.cardTitle {
+	color: #344b5e;
+	font: 600 14px/1.4 system-ui;
+	margin: 0 0 14px
+}
+
+/* 2 поля в ряд */
+.row2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 14px 18px;
+	margin-bottom: 12px;
+}
+
+.field {
+	display: grid;
+	gap: 6px
+}
+
+.label {
+	font-size: 12px;
+	color: #6a7b88
+}
+
+/* Поля */
+.input,
+.textarea {
+	border: 1px solid #dfe7f0;
+	border-radius: 6px;
+	background: #fff;
+	color: #17212a;
+	outline: none;
+	transition: .15s;
+}
+
+.input {
+	height: 40px;
+	padding: 0 12px
+}
+
+.textarea {
+	min-height: 140px;
+	padding: 10px 12px;
+	resize: vertical
+}
+
+/* Состояния полей */
+.input:focus,
+.textarea:focus {
+	border-color: #e81c2e;
+	box-shadow: 0 0 0 3px rgba(232, 28, 46, .12)
+}
+
+.isError {
+	border-color: #e81c2e !important;
+	box-shadow: 0 0 0 3px rgba(232, 28, 46, .12) !important
+}
+
+.isDisabled {
+	opacity: .6;
+	pointer-events: none
+}
+
+/* Кнопка «Добавить файл» как label */
+.fileBtn {
+	margin-top: 12px;
+	width: 100%;
+	height: 42px;
+	border-radius: 6px;
+	border: 2px solid #e81c2e;
+	background: #fff;
+	color: #e81c2e;
+	font-weight: 700;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	cursor: pointer;
+	transition: .15s;
+}
+
+.fileBtn:hover {
+	background: #fff5f6
+}
+
+.fileIcon {
+	filter: grayscale(100%)
+}
+
+.hiddenInput {
+	display: none
+}
+
+/* Действия */
+.actions {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 14px;
+	margin-top: 14px
+}
+
+.primary {
+	height: 44px;
+	border: 0;
+	border-radius: 6px;
+	background: #e81c2e;
+	color: #fff;
+	font-weight: 700;
+	transition: .15s;
+}
+
+.primary:hover {
+	filter: brightness(1.02)
+}
+
+.primary:active {
+	transform: translateY(1px)
+}
+
+.primary:disabled {
+	opacity: .6;
+	cursor: not-allowed
+}
+
+.ghost {
+	height: 44px;
+	border-radius: 6px;
+	border: 2px solid #e81c2e;
+	background: #fff;
+	color: #e81c2e;
+	font-weight: 700;
+	display: inline-grid;
+	place-items: center;
+	transition: .15s;
+	text-decoration: none;
+}
+
+.ghost:hover {
+	background: #fff5f6
+}
+
+/* Сообщения */
+.note {
+	margin-top: 10px;
+	font-size: 12px;
+	color: #8a98a6
+}
+
+.alert {
+	margin-top: 10px;
+	padding: 10px 12px;
+	border-radius: 6px;
+	font-size: 13px
+}
+
+.alertSuccess {
+	background: #eefaf1;
+	color: #1c7c3a;
+	border: 1px solid #c9ecd5
+}
+
+.alertError {
+	background: #fff0f1;
+	color: #9d1c28;
+	border: 1px solid #f3c2c7
+}
+
+/* ====== Адаптив ====== */
+@media (max-width:1240px) {
+	.grid {
+		grid-template-columns: 160px 1fr;
+		column-gap: 24px
+	}
+
+	.card {
+		width: 100%
+	}
+}
+
+@media (max-width:860px) {
+	.subInner {
+		grid-template-columns: 1fr;
+		row-gap: 10px
+	}
+
+	.subForm {
+		grid-auto-flow: row
+	}
+
+	.subInput {
+		width: 100%
+	}
+
+	.grid {
+		grid-template-columns: 1fr;
+		row-gap: 24px;
+		justify-items: center
+	}
+
+	.logoCol {
+		justify-content: center
+	}
+
+	.row2 {
+		grid-template-columns: 1fr
+	}
+}

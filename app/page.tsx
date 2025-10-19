@@ -6,6 +6,8 @@ import UnitCalc from '../components/unitcalc';
 import EmailDownloadModal from '../components/EmailDownloadModal';
 import CallbackModal from '../components/CallbackModal';
 import UEInfo from '../components/UEInfo';
+import FooterPromo from '../components/FooterPromo';
+
 
 export default function Page() {
   const [showEmail, setShowEmail] = useState(false);
@@ -30,6 +32,8 @@ export default function Page() {
         {showCallback && (
           <CallbackModal onClose={() => setShowCallback(false)} />
         )}
+
+		<FooterPromo />
       </main>
     </>
   );

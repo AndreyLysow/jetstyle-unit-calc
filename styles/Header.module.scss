@@ -183,7 +183,7 @@
 	transition: transform .24s ease;
 	z-index: 150;
 	padding: 84px 20px 24px;
-	/* сверху — под высоту хедера (перепишем на мобиле) */
+
 
 	nav {
 		display: flex;
@@ -269,7 +269,7 @@
 	/* под мобильную высоту */
 }
 
-/* доп. ужатие на очень узких */
+
 @media (max-width: 360px) {
 	.header__logo img {
 		width: 120px;

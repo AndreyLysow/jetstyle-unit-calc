@@ -1,18 +1,64 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI!;
-if (!MONGODB_URI) throw new Error("Missing MONGODB_URI");
+declare global {
+  // делаем кэш доступным между hot-reload'ами Next.js
+  // eslint-disable-next-line no-var
+  var _mongoose:
+    | {
+        conn: typeof mongoose | null;
+        promise: Promise<typeof mongoose> | null;
+        uri: string | null;
+      }
+    | undefined;
+}
 
-let cached = (global as any)._mongoose;
-if (!cached) cached = (global as any)._mongoose = { conn: null, promise: null };
+/** Собираем финальный URI */
+function makeUri() {
+  const raw = process.env.MONGODB_URI;
+  if (!raw) throw new Error("Missing MONGODB_URI");
+
+  const db = (process.env.MONGODB_DB || "unitcalc").trim();
+  const hasDbAtEnd = /\/[^/?]+$/.test(raw);
+  if (hasDbAtEnd) return raw;
+
+  return `${raw.replace(/\/$/, "")}/${db}`;
+}
+
+const FINAL_URI = makeUri();
+
+if (!global._mongoose) {
+  global._mongoose = { conn: null, promise: null, uri: FINAL_URI };
+} else {
+  global._mongoose.uri = global._mongoose.uri || FINAL_URI;
+}
 
 export async function dbConnect() {
-  if (cached.conn) return cached.conn;
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
-      dbName: process.env.MONGODB_DB || "unitcalc",
-    }).then(m => m);
+  const cache = global._mongoose!;
+  if (cache.conn && mongoose.connection.readyState === 1) return cache.conn;
+
+  if (!cache.promise) {
+    mongoose.set("strictQuery", true);
+    cache.promise = mongoose.connect(cache.uri!, {
+      bufferCommands: false,
+      maxPoolSize: 5,
+    });
   }
-  cached.conn = await cached.promise;
-  return cached.conn;
+
+  cache.conn = await cache.promise;
+  return cache.conn;
+}
+
+/** Опционально: отключение */
+export async function dbDisconnect() {
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+  }
+  global._mongoose = { conn: null, promise: null, uri: FINAL_URI };
+}
+
+/** Возвращает текущую базу (native MongoDB Db object) */
+export function getDb() {
+  const db = mongoose.connection.db;
+  if (!db) throw new Error("MongoDB not connected");
+  return db;
 }
