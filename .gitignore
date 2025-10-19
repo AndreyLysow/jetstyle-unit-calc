@@ -52,3 +52,4 @@ docker-compose.yml
 /dist-server/
 .next/
 node_modules/
+.env
